@@ -87,6 +87,24 @@
       </div>
     </div>
 
+    {% comment %}
+      Remitente: va justo debajo del destinatario para que, al doblar la
+      hoja por esta zona, queden destinatario + remitente a la vista y el
+      detalle de productos quede oculto al reparto.
+    {% endcomment %}
+    <div class="sender-box">
+      <p class="subtitle-bold to-uppercase sender-title">Remitente</p>
+      <p class="sender-detail">
+        <strong>{{ shop.name }}</strong>
+        <br>
+        RUT 76.520.639-1
+        <br>
+        {{ shop_address.summary }}
+        <br>
+        Tel: 569 9376 7892
+      </p>
+    </div>
+
     {% if order.note != blank %}
       <div class="notes">
         <p class="subtitle-bold to-uppercase">
@@ -372,6 +390,26 @@
       font-weight: bold;
       line-height: 1.1;
       white-space: nowrap;
+    }
+
+    /* ---- Remitente (justo bajo el destinatario, para doblar) ---- */
+    .sender-box {
+      border: 1px solid #999;
+      border-radius: 4px;
+      padding: 0.9em 1.2em;
+      margin: 0 0 1.5em;
+    }
+
+    .sender-title {
+      font-size: 0.9em;
+      color: #555;
+      margin-bottom: 0.4em;
+    }
+
+    .sender-detail {
+      margin: 0;
+      line-height: 1.5;
+      font-size: 1.05em;
     }
 
     .order-container {

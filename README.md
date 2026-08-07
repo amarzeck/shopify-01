@@ -32,6 +32,9 @@ pedido no trae el dato, la línea simplemente no se muestra.
 - **Bloque de despacho grande** (~40% de la hoja): a la izquierda el destinatario,
   RUT y dirección en tamaño grande; a la derecha un recuadro **enorme de "N° de
   Bulto"** para anotar con plumón en bodega y que el reparto lo lea sin confusión.
+- **Remitente (Inaltum Fitness)** justo debajo del destinatario: al doblar la hoja
+  por esa zona quedan destinatario + remitente a la vista y el detalle de productos
+  oculto al reparto. No se fuerza salto de página (el sistema pagina solo si hace falta).
 - **N° de Orden más grande** en el encabezado; **logo más pequeño**.
 - Agregado **RUT** y **Orden de Compra** automáticos desde el pedido.
 - **Comuna** y **Región** separadas (antes iban juntas en `city_province_zip`,
