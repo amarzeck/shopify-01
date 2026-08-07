@@ -4,6 +4,10 @@ Plantilla Liquid para la nota de entrega de Shopify (Order Printer / packing sli
 optimizada para usarse como **etiqueta de identificación de bultos** en despachos,
 principalmente a **clientes empresa**. Formato **hoja carta/A4**.
 
+> **🟢 Versión en producción (Shopify):** commit `5c2a9df` — al 2026-08-07.
+> Es la copia pegada y en uso dentro de Shopify. Cualquier cambio nuevo parte
+> desde aquí. (Historial de versiones productivas más abajo.)
+
 Archivo: [`nota_de_entrega_shopify.liquid`](./nota_de_entrega_shopify.liquid)
 
 ## Cómo usarla
@@ -92,3 +96,14 @@ en el HTML) la línea es:
 
 Para quitarle la negrita, borra `<strong>` y `</strong>`; para ponérsela a otra
 línea, envuélvela igual entre `<strong>...</strong>`.
+
+---
+
+## Historial de versiones en producción
+
+Cada vez que pegues una versión en Shopify y la des por buena, anótala aquí con
+su commit y fecha. Así siempre sabemos qué copia está viva.
+
+| Fecha       | Commit    | Notas                                             |
+|-------------|-----------|---------------------------------------------------|
+| 2026-08-07  | `5c2a9df` | Ajuste de interlineado del "___ de ___" (bultos). |
