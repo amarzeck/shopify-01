@@ -68,13 +68,6 @@
             No hay dirección de entrega
           {% endif %}
         </p>
-        <p class="dest-contact">
-          <strong>Web:</strong> {{ shop.email }}
-          <br>
-          <strong>Empresas:</strong> b2b@inaltum.cl &nbsp;·&nbsp; mercadopublico@inaltum.cl
-          <br>
-          {{ shop.domain }}
-        </p>
         {% if oc != blank %}
           <p class="dispatch-oc">
             <span class="dispatch-oc-label">Orden de Compra</span>
@@ -140,6 +133,14 @@
         </p>
       </div>
     {% endif %}
+
+    <p class="dest-contact">
+      <strong>Web:</strong> {{ shop.email }}
+      <br>
+      <strong>Empresas:</strong> b2b@inaltum.cl &nbsp;·&nbsp; mercadopublico@inaltum.cl
+      <br>
+      {{ shop.domain }}
+    </p>
 
     <hr>
     <div class="order-container">

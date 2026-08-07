@@ -40,8 +40,8 @@ pedido no trae el dato, la línea simplemente no se muestra.
 - **Comuna** y **Región** separadas (antes iban juntas en `city_province_zip`,
   con formato poco claro para Chile).
 - **Se eliminó el footer** que iba después de los artículos.
-- El bloque **destinatario** incluye los canales de contacto de Inaltum
-  (Web, Empresas y sitio web) para que queden visibles al doblar la hoja.
+- Los **canales de contacto de Inaltum** (Web, Empresas y sitio web) van al final,
+  **justo antes de que comiencen los productos**.
 - El bloque **"Gracias por tu compra"** (con el enlace al portal de boleta/factura)
   va ahora **enseguida después del Remitente**.
 - Los **artículos quedan al final**, de modo que doblando la hoja se ocultan del
