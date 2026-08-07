@@ -107,7 +107,7 @@
         <br>
         Empresas: b2b@inaltum.cl &nbsp;·&nbsp; mercadopublico@inaltum.cl
         <br>
-        {{ shop.domain }}
+        <strong>{{ shop.domain }}</strong>
       </p>
     </div>
 
@@ -354,14 +354,18 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      /* PERILLA A — posición vertical de TODO el grupo:
+         "flex-start" = arriba | "center" = al centro | "flex-end" = abajo */
       justify-content: flex-start;
       text-align: center;
+      /* PERILLA B — el primer valor (2.2em) SUBE/BAJA solo el rótulo:
+         más grande = más abajo, más chico = más arriba */
       padding: 2.2em 0.6em 0.6em;
     }
 
     .dispatch-bultos-label {
       display: block;
-      font-size: 1.6em;
+      font-size: 1.6em;   /* tamaño del texto "N° de Bulto" */
       text-transform: uppercase;
       font-weight: bold;
       letter-spacing: 0.05em;
@@ -370,10 +374,13 @@
 
     .dispatch-bultos-value {
       display: block;
-      font-size: 5em;
+      font-size: 5em;     /* tamaño de "___ de ___" */
       font-weight: bold;
       line-height: 1.1;
       white-space: nowrap;
+      /* PERILLA C — mueve SOLO los "___ de ___" hacia abajo,
+         sin tocar el rótulo. Sube este valor para dar más aire arriba. */
+      margin-top: 0;
     }
 
     .dest-contact {

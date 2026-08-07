@@ -40,8 +40,8 @@ pedido no trae el dato, la línea simplemente no se muestra.
 - **Comuna** y **Región** separadas (antes iban juntas en `city_province_zip`,
   con formato poco claro para Chile).
 - **Se eliminó el footer** que iba después de los artículos.
-- Los **canales de contacto de Inaltum** (Web, Empresas y sitio web) van al final,
-  **justo antes de que comiencen los productos**.
+- Los **canales de contacto de Inaltum** (Web, Empresas y sitio web) van dentro
+  del bloque **Remitente**.
 - El bloque **"Gracias por tu compra"** (con el enlace al portal de boleta/factura)
   va ahora **enseguida después del Remitente**.
 - Los **artículos quedan al final**, de modo que doblando la hoja se ocultan del
@@ -52,3 +52,43 @@ pedido no trae el dato, la línea simplemente no se muestra.
 - SKU etiquetado como `SKU:` para claridad en bodega.
 - Se mantienen los correos incrustados manualmente: `b2b@inaltum.cl` y
   `mercadopublico@inaltum.cl`.
+
+---
+
+## Instructivo: ajustes rápidos
+
+Todos estos cambios se hacen en el mismo archivo `nota_de_entrega_shopify.liquid`,
+dentro del bloque `<style>` (al final del archivo). Después de editar, **copia y
+pega de nuevo** el archivo completo en Shopify.
+
+### 1. Mover el recuadro "N° DE BULTO" y los "___ de ___" por separado
+
+En el CSS busca `.dispatch-bultos` (están marcadas como **PERILLA A / B / C**):
+
+- **Centrar todo el grupo** (rótulo + líneas juntos): en `.dispatch-bultos`,
+  cambia **PERILLA A**
+  `justify-content: flex-start;` → `justify-content: center;`
+  (`flex-start` = arriba, `center` = al centro, `flex-end` = abajo).
+
+- **Subir o bajar SOLO el rótulo "N° de Bulto"**: en `.dispatch-bultos`,
+  **PERILLA B**, ajusta el primer número del `padding` (hoy `2.2em`).
+  Más grande baja el rótulo; más chico lo sube.
+
+- **Bajar SOLO los "___ de ___"** (para dejar más espacio y escribir con plumón):
+  en `.dispatch-bultos-value`, **PERILLA C**, sube el valor de `margin-top`
+  (ej. `margin-top: 1.5em;`). Esto no mueve el rótulo.
+
+> Regla simple: **PERILLA B** mueve el rótulo, **PERILLA C** mueve las líneas.
+> Así los ajustas de forma independiente.
+
+### 2. Poner en negrita `www.inaltum.cl`
+
+Ya quedó en negrita. En el bloque **Remitente** (parte de arriba del archivo,
+en el HTML) la línea es:
+
+```liquid
+<strong>{{ shop.domain }}</strong>
+```
+
+Para quitarle la negrita, borra `<strong>` y `</strong>`; para ponérsela a otra
+línea, envuélvela igual entre `<strong>...</strong>`.
