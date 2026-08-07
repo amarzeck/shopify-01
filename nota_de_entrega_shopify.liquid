@@ -68,6 +68,13 @@
             No hay dirección de entrega
           {% endif %}
         </p>
+        <p class="dest-contact">
+          <strong>Web:</strong> {{ shop.email }}
+          <br>
+          <strong>Empresas:</strong> b2b@inaltum.cl &nbsp;·&nbsp; mercadopublico@inaltum.cl
+          <br>
+          {{ shop.domain }}
+        </p>
         {% if oc != blank %}
           <p class="dispatch-oc">
             <span class="dispatch-oc-label">Orden de Compra</span>
@@ -102,6 +109,14 @@
         {{ shop_address.summary }}
         <br>
         Tel: 569 9376 7892
+      </p>
+    </div>
+
+    <div class="thanks">
+      <p>
+        <strong>Gracias por tu compra.</strong>
+        <br>
+        Descarga tu Boleta o Factura en https://www.inaltum.cl/pages/portal-documentos-inaltum
       </p>
     </div>
 
@@ -191,36 +206,6 @@
         Hay otros productos de tu orden que no se incluyen en este despacho.
       </p>
     {% endunless %}
-    <hr>
-
-    <div class="footer">
-      <p>
-        <strong>
-          {{ shop.name }}
-        </strong>
-        <br>
-        Tel: 569 9376 7892
-        <br>
-        RUT 76.520.639-1
-        <br>
-        {{ shop_address.summary }}
-        <br>
-        Web:
-        {{ shop.email }}
-        <br>
-        Empresas:
-        b2b@inaltum.cl
-        &nbsp;·&nbsp;
-        mercadopublico@inaltum.cl
-        <br>
-        {{ shop.domain }}
-      </p>
-      <p>
-        <strong>Gracias por tu compra.</strong>
-        <br>
-        Descarga tu Boleta o Factura en https://www.inaltum.cl/pages/portal-documentos-inaltum
-      </p>
-    </div>
 </div>
 <style type="text/css">
     body {
@@ -392,6 +377,15 @@
       white-space: nowrap;
     }
 
+    .dest-contact {
+      margin: 0.8em 0 0;
+      padding-top: 0.6em;
+      border-top: 1px solid #ccc;
+      font-size: 0.95em;
+      line-height: 1.5;
+      color: #333;
+    }
+
     /* ---- Remitente (justo bajo el destinatario, para doblar) ---- */
     .sender-box {
       border: 1px solid #999;
@@ -491,16 +485,14 @@
       margin-top: 0.7em;
     }
 
-    .footer {
-      margin-top: 2em;
+    .thanks {
+      margin: 0 0 1.5em;
       text-align: center;
       line-height: 1.5;
-      font-size: 0.9em;
     }
 
-    .footer p {
+    .thanks p {
       margin: 0;
-      margin-bottom: 1.4em;
     }
 
     hr {

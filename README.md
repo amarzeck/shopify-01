@@ -39,8 +39,13 @@ pedido no trae el dato, la línea simplemente no se muestra.
 - Agregado **RUT** y **Orden de Compra** automáticos desde el pedido.
 - **Comuna** y **Región** separadas (antes iban juntas en `city_province_zip`,
   con formato poco claro para Chile).
-- Footer: **"Web:"** antepuesto al correo de ventas; se reemplazó el
-  "Mantente actualizado…" por el enlace al **portal de documentos** (boleta/factura).
+- **Se eliminó el footer** que iba después de los artículos.
+- El bloque **destinatario** incluye los canales de contacto de Inaltum
+  (Web, Empresas y sitio web) para que queden visibles al doblar la hoja.
+- El bloque **"Gracias por tu compra"** (con el enlace al portal de boleta/factura)
+  va ahora **enseguida después del Remitente**.
+- Los **artículos quedan al final**, de modo que doblando la hoja se ocultan del
+  reparto/picking según el tipo de transporte. Sin salto de página forzado.
 - Corrección: texto que estaba en inglés ("There are other items...") traducido.
 - Corrección: condicional redundante que mostraba "Destinatario" en ambas ramas.
 - Corrección ortográfica: "nuetras" → "nuestras".
