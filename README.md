@@ -29,14 +29,15 @@ pedido no trae el dato, la línea simplemente no se muestra.
 > cae automáticamente a `shipping_address.company`.
 
 ## Cambios respecto a la versión anterior
-- **Bloque de despacho destacado** (recuadro): destinatario, RUT y dirección en
-  tamaño grande para leer rápido al identificar el bulto.
+- **Bloque de despacho grande** (~40% de la hoja): a la izquierda el destinatario,
+  RUT y dirección en tamaño grande; a la derecha un recuadro **enorme de "N° de
+  Bulto"** para anotar con plumón en bodega y que el reparto lo lea sin confusión.
 - **N° de Orden más grande** en el encabezado; **logo más pequeño**.
 - Agregado **RUT** y **Orden de Compra** automáticos desde el pedido.
 - **Comuna** y **Región** separadas (antes iban juntas en `city_province_zip`,
   con formato poco claro para Chile).
-- Recuadro **"N° de Bulto ___ de ___"** para completar a mano (Shopify no conoce
-  la cantidad física de bultos).
+- Footer: **"Web:"** antepuesto al correo de ventas; se reemplazó el
+  "Mantente actualizado…" por el enlace al **portal de documentos** (boleta/factura).
 - Corrección: texto que estaba en inglés ("There are other items...") traducido.
 - Corrección: condicional redundante que mostraba "Destinatario" en ambas ramas.
 - Corrección ortográfica: "nuetras" → "nuestras".

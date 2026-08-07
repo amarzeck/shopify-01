@@ -32,57 +32,58 @@
     {% assign oc = order.attributes["Orden de Compra"] | default: order.attributes["OC"] | default: order.attributes["Numero OC"] %}
 
     <div class="dispatch-box">
-      <p class="subtitle-bold to-uppercase dispatch-title">Destinatario</p>
-      <p class="address-detail">
-        {% if shipping_address != blank %}
-          <span class="dest-name">{{ shipping_address.name }}</span>
-          {% if razon_social != blank %}
+      <div class="dispatch-recipient">
+        <p class="subtitle-bold to-uppercase dispatch-title">Destinatario</p>
+        <p class="address-detail">
+          {% if shipping_address != blank %}
+            <span class="dest-name">{{ shipping_address.name }}</span>
+            {% if razon_social != blank %}
+              <br>
+              <strong>Empresa:</strong> {{ razon_social }}
+            {% endif %}
+            {% if rut != blank %}
+              <br>
+              <strong>RUT:</strong> {{ rut }}
+            {% endif %}
             <br>
-            <strong>Empresa:</strong> {{ razon_social }}
-          {% endif %}
-          {% if rut != blank %}
+            <span class="dest-address">
+              <strong>Dirección:</strong> {{ shipping_address.address1 }}
+              {% if shipping_address.address2 != blank %}, {{ shipping_address.address2 }}{% endif %}
+            </span>
+            {% if shipping_address.city != blank %}
+              <br>
+              <strong>Comuna:</strong> {{ shipping_address.city }}
+            {% endif %}
+            {% if shipping_address.province != blank %}
+              <br>
+              <strong>Región:</strong> {{ shipping_address.province }}
+            {% endif %}
             <br>
-            <strong>RUT:</strong> {{ rut }}
+            <strong>País:</strong> {{ shipping_address.country }}
+            {% if shipping_address.phone != blank %}
+              <br>
+              <strong>Teléfono:</strong> {{ shipping_address.phone }}
+            {% endif %}
+          {% else %}
+            No hay dirección de entrega
           {% endif %}
-          <br>
-          <span class="dest-address">
-            <strong>Dirección:</strong> {{ shipping_address.address1 }}
-            {% if shipping_address.address2 != blank %}, {{ shipping_address.address2 }}{% endif %}
-          </span>
-          {% if shipping_address.city != blank %}
-            <br>
-            <strong>Comuna:</strong> {{ shipping_address.city }}
-          {% endif %}
-          {% if shipping_address.province != blank %}
-            <br>
-            <strong>Región:</strong> {{ shipping_address.province }}
-          {% endif %}
-          <br>
-          <strong>País:</strong> {{ shipping_address.country }}
-          {% if shipping_address.phone != blank %}
-            <br>
-            <strong>Teléfono:</strong> {{ shipping_address.phone }}
-          {% endif %}
-        {% else %}
-          No hay dirección de entrega
-        {% endif %}
-      </p>
-
-      <div class="dispatch-meta">
+        </p>
         {% if oc != blank %}
-          <div class="dispatch-meta-item">
-            <span class="dispatch-meta-label">Orden de Compra</span>
-            <span class="dispatch-meta-value">{{ oc }}</span>
-          </div>
+          <p class="dispatch-oc">
+            <span class="dispatch-oc-label">Orden de Compra</span>
+            <span class="dispatch-oc-value">{{ oc }}</span>
+          </p>
         {% endif %}
-        {% comment %}
-          El N° de bulto es un dato físico del despacho y Shopify no lo
-          conoce, por eso queda como recuadro para completar a mano.
-        {% endcomment %}
-        <div class="dispatch-meta-item">
-          <span class="dispatch-meta-label">N° de Bulto</span>
-          <span class="dispatch-meta-value">_____ de _____</span>
-        </div>
+      </div>
+
+      {% comment %}
+        El N° de bulto es un dato físico del despacho y Shopify no lo
+        conoce, por eso queda como recuadro GRANDE para completar a mano
+        con plumón en bodega y que el reparto lo lea sin confusión.
+      {% endcomment %}
+      <div class="dispatch-bultos">
+        <span class="dispatch-bultos-label">N° de Bulto</span>
+        <span class="dispatch-bultos-value">___ de ___</span>
       </div>
     </div>
 
@@ -186,6 +187,7 @@
         <br>
         {{ shop_address.summary }}
         <br>
+        Web:
         {{ shop.email }}
         <br>
         Empresas:
@@ -198,7 +200,7 @@
       <p>
         <strong>Gracias por tu compra.</strong>
         <br>
-        Mantente actualizado a través de nuestras Redes Sociales
+        Descarga tu Boleta o Factura en https://www.inaltum.cl/pages/portal-documentos-inaltum
       </p>
     </div>
 </div>
@@ -272,61 +274,104 @@
       text-align: right;
     }
 
-    /* ---- Bloque de despacho destacado ---- */
+    /* ---- Bloque de despacho destacado (~40% de la hoja carta) ---- */
     .dispatch-box {
-      border: 2px solid black;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      border: 3px solid black;
       border-radius: 4px;
-      padding: 1em 1.2em;
       margin: 1.5em 0;
+      min-height: 420px;
+    }
+
+    .dispatch-recipient {
+      -webkit-box-flex: 3;
+      -webkit-flex: 3;
+      flex: 3;
+      padding: 1.2em 1.4em;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: column;
     }
 
     .dispatch-title {
-      font-size: 1em;
+      font-size: 1.1em;
       letter-spacing: 0.05em;
       border-bottom: 1px solid #ccc;
       padding-bottom: 0.4em;
     }
 
+    .dispatch-recipient .address-detail {
+      font-size: 1.25em;
+      line-height: 1.7;
+    }
+
     .dest-name {
-      font-size: 1.35em;
+      font-size: 1.6em;
       font-weight: bold;
     }
 
     .dest-address {
-      font-size: 1.1em;
+      font-size: 1.15em;
     }
 
-    .dispatch-meta {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      flex-direction: row;
-      gap: 1em;
-      margin-top: 1em;
+    .dispatch-oc {
+      margin: auto 0 0;
       padding-top: 0.8em;
       border-top: 1px solid #ccc;
     }
 
-    .dispatch-meta-item {
-      flex: 1;
-      border: 1px solid #999;
-      border-radius: 4px;
-      padding: 0.5em 0.7em;
-    }
-
-    .dispatch-meta-label {
+    .dispatch-oc-label {
       display: block;
-      font-size: 0.75em;
+      font-size: 0.8em;
       text-transform: uppercase;
       font-weight: bold;
       color: #555;
     }
 
-    .dispatch-meta-value {
+    .dispatch-oc-value {
       display: block;
-      font-size: 1.25em;
+      font-size: 1.6em;
       font-weight: bold;
-      margin-top: 0.15em;
+      margin-top: 0.1em;
+    }
+
+    /* ---- Recuadro N° de Bulto: MUY grande para escribir con plumón ---- */
+    .dispatch-bultos {
+      -webkit-box-flex: 2;
+      -webkit-flex: 2;
+      flex: 2;
+      border-left: 3px solid black;
+      background: #f5f5f5;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0.6em;
+    }
+
+    .dispatch-bultos-label {
+      display: block;
+      font-size: 1.6em;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25em;
+    }
+
+    .dispatch-bultos-value {
+      display: block;
+      font-size: 5em;
+      font-weight: bold;
+      line-height: 1.1;
+      white-space: nowrap;
     }
 
     .order-container {
