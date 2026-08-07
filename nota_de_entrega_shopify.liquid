@@ -1,0 +1,465 @@
+<div class="wrapper">
+    <div class="header">
+      <div class="shop-title">
+        <img src="https://cdn.shopify.com/s/files/1/0634/0221/3593/files/Logo_Preferente_Color_Positivo_-_INALTUM.png" style="width: 150px; height: 50px;">
+      </div>
+      <div class="order-title">
+        <p class="order-number">
+          Orden {{ order.name }}
+        </p>
+        {% assign mes = "Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre" | split: "," %}
+        {% assign fecha = order.created_at | date: "%d/%m/%Y" | split: "/" %}
+        {% assign index = fecha[1] | minus: 1 %}
+        <p class="text-align-right">
+            {{ fecha[0] }} de {{ mes[index] }} del {{ fecha[2] }}
+        </p>
+      </div>
+    </div>
+
+    {% comment %}
+      ============================================================
+      DATOS EMPRESA (RUT / ORDEN DE COMPRA)
+      ------------------------------------------------------------
+      Estos valores vienen de los "atributos" que el cliente completa
+      en el checkout. Ajusta los nombres entre comillas ("RUT",
+      "Orden de Compra", etc.) para que coincidan EXACTO con los
+      nombres de tus campos en Shopify. Si un pedido no trae el dato,
+      simplemente no se muestra.
+      ============================================================
+    {% endcomment %}
+    {% assign rut = order.attributes["RUT"] | default: order.attributes["Rut"] | default: order.attributes["rut"] %}
+    {% assign razon_social = order.attributes["Razon Social"] | default: order.attributes["Razón Social"] | default: shipping_address.company %}
+    {% assign oc = order.attributes["Orden de Compra"] | default: order.attributes["OC"] | default: order.attributes["Numero OC"] %}
+
+    <div class="dispatch-box">
+      <p class="subtitle-bold to-uppercase dispatch-title">Destinatario</p>
+      <p class="address-detail">
+        {% if shipping_address != blank %}
+          <span class="dest-name">{{ shipping_address.name }}</span>
+          {% if razon_social != blank %}
+            <br>
+            <strong>Empresa:</strong> {{ razon_social }}
+          {% endif %}
+          {% if rut != blank %}
+            <br>
+            <strong>RUT:</strong> {{ rut }}
+          {% endif %}
+          <br>
+          <span class="dest-address">
+            <strong>Dirección:</strong> {{ shipping_address.address1 }}
+            {% if shipping_address.address2 != blank %}, {{ shipping_address.address2 }}{% endif %}
+          </span>
+          {% if shipping_address.city != blank %}
+            <br>
+            <strong>Comuna:</strong> {{ shipping_address.city }}
+          {% endif %}
+          {% if shipping_address.province != blank %}
+            <br>
+            <strong>Región:</strong> {{ shipping_address.province }}
+          {% endif %}
+          <br>
+          <strong>País:</strong> {{ shipping_address.country }}
+          {% if shipping_address.phone != blank %}
+            <br>
+            <strong>Teléfono:</strong> {{ shipping_address.phone }}
+          {% endif %}
+        {% else %}
+          No hay dirección de entrega
+        {% endif %}
+      </p>
+
+      <div class="dispatch-meta">
+        {% if oc != blank %}
+          <div class="dispatch-meta-item">
+            <span class="dispatch-meta-label">Orden de Compra</span>
+            <span class="dispatch-meta-value">{{ oc }}</span>
+          </div>
+        {% endif %}
+        {% comment %}
+          El N° de bulto es un dato físico del despacho y Shopify no lo
+          conoce, por eso queda como recuadro para completar a mano.
+        {% endcomment %}
+        <div class="dispatch-meta-item">
+          <span class="dispatch-meta-label">N° de Bulto</span>
+          <span class="dispatch-meta-value">_____ de _____</span>
+        </div>
+      </div>
+    </div>
+
+    {% if order.note != blank %}
+      <div class="notes">
+        <p class="subtitle-bold to-uppercase">
+          Notas
+        </p>
+        <p class="notes-details">
+          {{ order.note }}
+        </p>
+      </div>
+    {% endif %}
+    {% if delivery_method.instructions != blank %}
+      <div class="notes">
+        <p class="subtitle-bold to-uppercase">
+          Instrucciones de entrega
+        </p>
+        <p class="notes-details">
+          {{ delivery_method.instructions }}
+        </p>
+      </div>
+    {% endif %}
+
+    <hr>
+    <div class="order-container">
+      <div class="order-container-header">
+        <div class="order-container-header-left-content">
+          <p class="subtitle-bold to-uppercase">
+            Artículos
+          </p>
+        </div>
+        <div class="order-container-header-right-content">
+          <p class="subtitle-bold to-uppercase">
+            Cantidad
+          </p>
+        </div>
+      </div>
+
+      {% comment %}
+      To adjust the size of line item images, change desired_image_size.
+      The other variables make sure your images print at high quality.
+      {% endcomment %}
+      {% assign desired_image_size = 58 %}
+      {% assign resolution_adjusted_size = desired_image_size | times: 300 | divided_by: 72 | ceil %}
+      {% capture effective_image_dimensions %}
+        {{ resolution_adjusted_size }}x{{ resolution_adjusted_size }}
+      {% endcapture %}
+
+      {% for line_item in line_items_in_shipment %}
+        <div class="flex-line-item">
+          <div class="flex-line-item-img">
+            {% if line_item.image != blank %}
+              <div class="aspect-ratio aspect-ratio-square" style="width: {{ desired_image_size }}px; height: {{ desired_image_size }}px;">
+                {{ line_item.image | img_url: effective_image_dimensions | img_tag: '', 'aspect-ratio__content' }}
+              </div>
+            {% endif %}
+          </div>
+          <div class="flex-line-item-description">
+            <p>
+              <span class="line-item-description-line">
+                {{ line_item.title }}
+              </span>
+              {% if line_item.variant_title != blank %}
+                <span class="line-item-description-line">
+                  {{ line_item.variant_title }}
+                </span>
+              {% endif %}
+              {% if line_item.sku != blank %}
+                <span class="line-item-description-line">
+                  SKU: {{ line_item.sku }}
+                </span>
+              {% endif %}
+            </p>
+          </div>
+          <div class="flex-line-item-quantity">
+            <p class="text-align-right">
+              {{ line_item.shipping_quantity }} de {{ line_item.quantity }}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% unless includes_all_line_items_in_order %}
+      <hr class="subdued-separator">
+      <p class="missing-line-items-text ">
+        Hay otros productos de tu orden que no se incluyen en este despacho.
+      </p>
+    {% endunless %}
+    <hr>
+
+    <div class="footer">
+      <p>
+        <strong>
+          {{ shop.name }}
+        </strong>
+        <br>
+        Tel: 569 9376 7892
+        <br>
+        RUT 76.520.639-1
+        <br>
+        {{ shop_address.summary }}
+        <br>
+        {{ shop.email }}
+        <br>
+        Empresas:
+        b2b@inaltum.cl
+        &nbsp;·&nbsp;
+        mercadopublico@inaltum.cl
+        <br>
+        {{ shop.domain }}
+      </p>
+      <p>
+        <strong>Gracias por tu compra.</strong>
+        <br>
+        Mantente actualizado a través de nuestras Redes Sociales
+      </p>
+    </div>
+</div>
+<style type="text/css">
+    body {
+      font-size: 15px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .wrapper {
+      width: 831px;
+      margin: auto;
+      padding: 4em;
+      font-family: "Noto Sans", sans-serif;
+      font-weight: 400;
+    }
+
+    .header {
+      width: 100%;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .header p {
+      margin: 0;
+    }
+
+    .shop-title {
+      -webkit-box-flex: 6;
+      -webkit-flex: 6;
+      flex: 6;
+      font-size: 1.9em;
+    }
+
+    .order-title {
+      -webkit-box-flex: 4;
+      -webkit-flex: 4;
+      flex: 4;
+    }
+
+    .order-number {
+      text-align: right;
+      font-size: 2em;
+      font-weight: bold;
+      line-height: 1.1;
+      margin: 0 0 0.1em;
+    }
+
+    .address-detail {
+      margin: 0.7em 0 0;
+      line-height: 1.6;
+    }
+
+    .subtitle-bold {
+      font-weight: bold;
+      margin: 0;
+      font-size: 0.85em;
+    }
+
+    .to-uppercase {
+      text-transform: uppercase;
+    }
+
+    .text-align-right {
+      text-align: right;
+    }
+
+    /* ---- Bloque de despacho destacado ---- */
+    .dispatch-box {
+      border: 2px solid black;
+      border-radius: 4px;
+      padding: 1em 1.2em;
+      margin: 1.5em 0;
+    }
+
+    .dispatch-title {
+      font-size: 1em;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 0.4em;
+    }
+
+    .dest-name {
+      font-size: 1.35em;
+      font-weight: bold;
+    }
+
+    .dest-address {
+      font-size: 1.1em;
+    }
+
+    .dispatch-meta {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      gap: 1em;
+      margin-top: 1em;
+      padding-top: 0.8em;
+      border-top: 1px solid #ccc;
+    }
+
+    .dispatch-meta-item {
+      flex: 1;
+      border: 1px solid #999;
+      border-radius: 4px;
+      padding: 0.5em 0.7em;
+    }
+
+    .dispatch-meta-label {
+      display: block;
+      font-size: 0.75em;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .dispatch-meta-value {
+      display: block;
+      font-size: 1.25em;
+      font-weight: bold;
+      margin-top: 0.15em;
+    }
+
+    .order-container {
+      padding: 0 0.7em;
+    }
+
+    .order-container-header {
+      display: inline-block;
+      width: 100%;
+      margin-top: 1.4em;
+    }
+
+    .order-container-header-left-content {
+      float: left;
+    }
+
+    .order-container-header-right-content {
+      float: right;
+    }
+
+    .flex-line-item {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 1.4em 0;
+      page-break-inside: avoid;
+    }
+
+    .flex-line-item-img {
+      margin-right: 1.4em;
+      min-width: {{ desired_image_size }}px;
+    }
+
+    .flex-line-item-description {
+      -webkit-box-flex: 7;
+      -webkit-flex: 7;
+      flex: 7;
+    }
+
+    .line-item-description-line {
+      display: block;
+    }
+
+    .flex-line-item-description p {
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .flex-line-item-quantity {
+      -webkit-box-flex: 3;
+      -webkit-flex: 3;
+      flex: 3;
+    }
+
+    .subdued-separator {
+      height: 0.07em;
+      border: none;
+      color: lightgray;
+      background-color: lightgray;
+      margin: 0;
+    }
+
+    .missing-line-items-text {
+      margin: 1.4em 0;
+      padding: 0 0.7em;
+    }
+
+    .notes {
+      margin-top: 1.5em;
+    }
+
+    .notes p {
+      margin-bottom: 0;
+    }
+
+    .notes .notes-details {
+      margin-top: 0.7em;
+    }
+
+    .footer {
+      margin-top: 2em;
+      text-align: center;
+      line-height: 1.5;
+      font-size: 0.9em;
+    }
+
+    .footer p {
+      margin: 0;
+      margin-bottom: 1.4em;
+    }
+
+    hr {
+      height: 0.14em;
+      border: none;
+      color: black;
+      background-color: black;
+      margin: 0;
+    }
+
+    .aspect-ratio {
+      position: relative;
+      display: block;
+      background: #fafbfc;
+      padding: 0;
+    }
+
+    .aspect-ratio::before {
+      z-index: 1;
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border: 1px solid rgba(195,207,216,0.3);
+    }
+
+    .aspect-ratio--square {
+      width: 100%;
+      padding-bottom: 100%;
+    }
+
+    .aspect-ratio__content {
+      position: absolute;
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+    }
+</style>
