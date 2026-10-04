@@ -1,10 +1,15 @@
 {
   "name": "volume-discount",
   "version": "1.0.0",
-  "description": "Shopify Function (product discount) para descuentos mayoristas por volumen y segmento.",
-  "type": "module",
+  "license": "UNLICENSED",
   "scripts": {
-    "typegen": "shopify app function typegen",
-    "build": "shopify app function build"
+    "shopify": "npm exec -- shopify",
+    "typegen": "npm exec -- shopify app function typegen",
+    "build": "npm exec -- shopify app function build",
+    "preview": "npm exec -- shopify app function run"
+  },
+  "dependencies": {
+    "@shopify/shopify_function": "0.1.0",
+    "javy": "0.1.2"
   }
 }
