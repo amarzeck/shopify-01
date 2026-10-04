@@ -6,14 +6,40 @@ import {
 /**
  * Descuento mayorista por volumen, por LINEA de carrito y por SEGMENTO (tag).
  *
- * - Lee la tabla de tramos (JSON) desde el metafield del descuento.
- * - Detecta el segmento de cada producto por sus tags
- *   (Importado / Nacional / Maquinaria), respetando `priority`.
- * - Aplica el % del tramo segun la cantidad de ESA linea (no suma otras lineas).
+ * Fuente de los tramos (en este orden):
+ *   1. Metafield de la tienda  shop.metafields.inaltum.volume_tiers  (editable
+ *      en caliente, compartido con el bloque de tema).
+ *   2. DEFAULT_TIERS (respaldo quemado) si el metafield no esta o no se puede leer.
+ *
+ * Reglas: detecta el segmento por los tags del producto (respetando `priority`)
+ * y aplica el % del tramo segun la cantidad de ESA linea (no suma otras lineas).
  *
  * @typedef {import("../generated/api").CartInput} RunInput
  * @typedef {import("../generated/api").CartLinesDiscountsGenerateRunResult} CartLinesDiscountsGenerateRunResult
  */
+
+/** Respaldo: debe coincidir con config/tiers.json. */
+const DEFAULT_TIERS = {
+  priority: ["Maquinaria", "Importado", "Nacional"],
+  segments: {
+    Importado: [
+      { minQty: 3, percentage: 5 },
+      { minQty: 6, percentage: 10 },
+      { minQty: 12, percentage: 18 },
+      { minQty: 20, percentage: 25 },
+    ],
+    Nacional: [
+      { minQty: 5, percentage: 3 },
+      { minQty: 10, percentage: 6 },
+      { minQty: 20, percentage: 10 },
+    ],
+    Maquinaria: [
+      { minQty: 2, percentage: 3 },
+      { minQty: 3, percentage: 6 },
+      { minQty: 5, percentage: 10 },
+    ],
+  },
+};
 
 /** @type {CartLinesDiscountsGenerateRunResult} */
 const EMPTY = { operations: [] };
@@ -31,9 +57,10 @@ export function cartLinesDiscountsGenerateRun(input) {
     return EMPTY;
   }
 
-  // Configuracion de tramos (objeto JSON ya parseado).
-  const config = input.discount.metafield && input.discount.metafield.jsonValue;
-  if (!config) return EMPTY;
+  // Tabla de tramos: metafield de la tienda, con respaldo quemado.
+  const fromShop =
+    input.shop && input.shop.metafield ? input.shop.metafield.jsonValue : null;
+  const config = fromShop || DEFAULT_TIERS;
 
   const priority = Array.isArray(config.priority) ? config.priority : [];
   const segments = config.segments || {};
@@ -51,7 +78,7 @@ export function cartLinesDiscountsGenerateRun(input) {
       flags[entry.tag] = entry.hasTag;
     }
 
-    // Resolver el segmento: primero por prioridad, luego cualquiera presente.
+    // Resolver segmento: primero por prioridad, luego cualquiera presente.
     let segment = null;
     for (const s of priority) {
       if (flags[s]) {

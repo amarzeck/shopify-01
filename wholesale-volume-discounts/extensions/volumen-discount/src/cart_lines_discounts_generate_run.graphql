@@ -7,7 +7,7 @@ query CartInput {
         __typename
         ... on ProductVariant {
           product {
-            # Pregunta a Shopify que tags de segmento tiene el producto.
+            # Tags de segmento del producto.
             hasTags(tags: ["Importado", "Nacional", "Maquinaria"]) {
               tag
               hasTag
@@ -19,8 +19,12 @@ query CartInput {
   }
   discount {
     discountClasses
-    # Tabla de tramos (JSON) guardada como metafield del descuento.
-    metafield(namespace: "$app", key: "function-configuration") {
+  }
+  shop {
+    # Tabla de tramos (JSON) como metafield de la tienda. Unica fuente de
+    # verdad, compartida con el bloque de tema. Si no se puede leer, la
+    # funcion usa DEFAULT_TIERS (respaldo quemado en el codigo).
+    metafield(namespace: "inaltum", key: "volume_tiers") {
       jsonValue
     }
   }
