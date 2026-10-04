@@ -1,0 +1,42 @@
+{%- comment -%}
+  INALTUM: aplica por defecto el filtro nativo "En existencia"
+  (filter.v.availability=1) en paginas de LISTADO: colecciones y busqueda.
+
+  - Oculta los productos agotados de los listados, sin afectar la ficha
+    (sigue accesible por link directo).
+  - Solo actua si el visitante NO ha aplicado ningun filtro (respeta su
+    eleccion; si elige "Agotado" u otro filtro, no interviene).
+  - Version global y mejorada del script antiguo que solo cubria /collections/.
+
+  Instalacion: {% render 'inaltum-default-instock' %} antes de </body> en
+  layout/theme.liquid.
+{%- endcomment -%}
+<script>
+(function () {
+  try {
+    var path = window.location.pathname || '';
+    var isListing =
+      path.indexOf('/collections/') === 0 || path.indexOf('/search') === 0;
+    if (!isListing) return;
+
+    var url = new URL(window.location.href);
+    var params = url.searchParams;
+
+    // Si ya hay cualquier filtro activo, no intervenir.
+    var hasFilter = false;
+    params.forEach(function (_, key) {
+      if (key && key.indexOf('filter.') === 0) hasFilter = true;
+    });
+    if (hasFilter) return;
+
+    // Si ya esta aplicado "En existencia", no intervenir.
+    if (params.get('filter.v.availability') === '1') return;
+
+    params.set('filter.v.availability', '1');
+    url.search = params.toString();
+    window.location.replace(url.toString());
+  } catch (e) {
+    /* fail silently */
+  }
+})();
+</script>
