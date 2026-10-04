@@ -9,6 +9,9 @@
     "link": "shopify app config link"
   },
   "dependencies": {
-    "@shopify/shopify_function": "~2.0.0"
+    "@preact/signals": "^2.11.3",
+    "@shopify/shopify_function": "~2.0.0",
+    "@shopify/ui-extensions": "~2026.01.0",
+    "preact": "^10.29.8"
   }
 }
