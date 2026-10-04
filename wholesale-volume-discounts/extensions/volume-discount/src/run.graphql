@@ -1,0 +1,29 @@
+query Input {
+  cart {
+    lines {
+      id
+      quantity
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          id
+          product {
+            # Pregunta a Shopify si el producto lleva cada tag de segmento.
+            # Devuelve una lista [{ tag, hasTag }] que resolvemos en run.js.
+            hasTags(tags: ["Importado", "Nacional", "Maquinaria"]) {
+              tag
+              hasTag
+            }
+          }
+        }
+      }
+    }
+  }
+  # La tabla de tramos vive en un metafield del propio descuento automatico.
+  # Se escribe al crear el descuento (ver README-pilot.md, paso 4).
+  discountNode {
+    metafield(namespace: "volume_discount", key: "tiers") {
+      value
+    }
+  }
+}

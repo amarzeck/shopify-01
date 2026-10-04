@@ -1,0 +1,11 @@
+{
+  "name": "inaltum-wholesale-discounts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App de Shopify (Function + bloque de tema) para precios mayoristas por volumen y segmento en Inaltum Fitness.",
+  "scripts": {
+    "dev": "shopify app dev",
+    "deploy": "shopify app deploy",
+    "link": "shopify app config link"
+  }
+}

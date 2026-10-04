@@ -1,0 +1,41 @@
+/* Estilos del bloque "Precios por cantidad". Cargalo desde el bloque con
+   {{ 'quantity-table.css' | asset_url | stylesheet_tag }} si quieres separarlo,
+   o deja los estilos inline. Hereda colores del esquema del tema. */
+
+.inaltum-qty-table {
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+
+.inaltum-qty-table__heading {
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.inaltum-qty-table__grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inaltum-qty-table__grid th,
+.inaltum-qty-table__grid td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(var(--color-foreground, 18 18 18), 0.12);
+}
+
+.inaltum-qty-table__grid th {
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+.inaltum-qty-table__unit {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.inaltum-qty-table__note {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}

@@ -1,0 +1,22 @@
+{
+  "_comment": "Fuente de verdad de los tramos mayoristas de Inaltum. Edita SOLO este archivo y re-sincroniza (ver README-pilot.md). priority define que segmento gana si un producto tiene mas de un tag. minQty = cantidad minima en la linea para activar el tramo. percentage = % de descuento.",
+  "priority": ["Maquinaria", "Importado", "Nacional"],
+  "segments": {
+    "Importado": [
+      { "minQty": 3,  "percentage": 5 },
+      { "minQty": 6,  "percentage": 10 },
+      { "minQty": 12, "percentage": 18 },
+      { "minQty": 20, "percentage": 25 }
+    ],
+    "Nacional": [
+      { "minQty": 5,  "percentage": 3 },
+      { "minQty": 10, "percentage": 6 },
+      { "minQty": 20, "percentage": 10 }
+    ],
+    "Maquinaria": [
+      { "minQty": 2, "percentage": 3 },
+      { "minQty": 3, "percentage": 6 },
+      { "minQty": 5, "percentage": 10 }
+    ]
+  }
+}

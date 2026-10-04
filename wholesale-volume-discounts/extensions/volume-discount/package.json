@@ -1,0 +1,10 @@
+{
+  "name": "volume-discount",
+  "version": "1.0.0",
+  "description": "Shopify Function (product discount) para descuentos mayoristas por volumen y segmento.",
+  "type": "module",
+  "scripts": {
+    "typegen": "shopify app function typegen",
+    "build": "shopify app function build"
+  }
+}

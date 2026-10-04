@@ -1,0 +1,189 @@
+{%- comment -%}
+  Tabla de precios por cantidad (mayorista) para la ficha de producto.
+
+  - Lee la configuracion de tramos desde el metafield de la TIENDA
+    shop.metafields.<namespace>.<key> (por defecto inaltum.volume_tiers),
+    que es un espejo de config/tiers.json (ver README-pilot.md).
+  - Detecta el segmento del producto por sus tags, respetando `priority`.
+  - Muestra, por tramo: cantidad minima, % de descuento y precio unitario
+    resultante sobre la variante seleccionada. Un script lo recalcula al
+    cambiar de variante.
+
+  Si el producto no tiene tag de segmento, o no hay config, el bloque no
+  muestra nada (no estorba en productos retail).
+{%- endcomment -%}
+
+{%- liquid
+  assign ns = block.settings.metafield_namespace | default: 'inaltum'
+  assign key = block.settings.metafield_key | default: 'volume_tiers'
+  assign config = shop.metafields[ns][key].value
+
+  assign segment = ''
+  if config != blank and config.priority != blank
+    for s in config.priority
+      if segment == '' and product.tags contains s
+        assign segment = s
+      endif
+    endfor
+  endif
+
+  assign tiers = ''
+  if segment != '' and config.segments != blank
+    assign tiers = config.segments[segment]
+  endif
+-%}
+
+{%- if tiers != blank and tiers.size > 0 -%}
+  {%- assign current = product.selected_or_first_available_variant -%}
+  <div
+    class="inaltum-qty-table"
+    data-inaltum-qty-table
+    data-segment="{{ segment }}"
+  >
+    {%- if block.settings.heading != blank -%}
+      <p class="inaltum-qty-table__heading">{{ block.settings.heading }}</p>
+    {%- endif -%}
+
+    <table class="inaltum-qty-table__grid">
+      <thead>
+        <tr>
+          <th>{{ block.settings.col_qty | default: 'Cantidad' }}</th>
+          <th>{{ block.settings.col_discount | default: 'Descuento' }}</th>
+          <th>{{ block.settings.col_unit | default: 'Precio por unidad' }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for tier in tiers -%}
+          {%- assign factor = 100 | minus: tier.percentage -%}
+          {%- assign unit = current.price | times: factor | divided_by: 100 -%}
+          <tr data-min-qty="{{ tier.minQty }}" data-percentage="{{ tier.percentage }}">
+            <td>{{ tier.minQty }}+</td>
+            <td>-{{ tier.percentage }}%</td>
+            <td class="inaltum-qty-table__unit">{{ unit | money }}</td>
+          </tr>
+        {%- endfor -%}
+      </tbody>
+    </table>
+
+    {%- if block.settings.note != blank -%}
+      <p class="inaltum-qty-table__note">{{ block.settings.note }}</p>
+    {%- endif -%}
+
+    {%- comment -%} Precios de cada variante para recalcular en JS al cambiar de variante. {%- endcomment -%}
+    <script type="application/json" data-inaltum-variant-prices>
+      {
+        {%- for v in product.variants -%}
+          "{{ v.id }}": {{ v.price | json }}{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      }
+    </script>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.currentScript.previousElementSibling;
+      if (!root || !root.matches('[data-inaltum-qty-table]')) {
+        root = document.querySelector('[data-inaltum-qty-table]');
+      }
+      if (!root) return;
+
+      var pricesEl = root.querySelector('[data-inaltum-variant-prices]');
+      var prices = {};
+      try { prices = JSON.parse(pricesEl.textContent); } catch (e) { return; }
+
+      var moneyFormat = {{ shop.money_format | json }};
+
+      function formatMoney(cents) {
+        // Formato simple CLP: separador de miles con punto, sin decimales.
+        var amount = Math.round(cents / 100);
+        var withSep = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return moneyFormat.replace(/\{\{\s*amount_no_decimals\s*\}\}|\{\{\s*amount\s*\}\}/i, withSep);
+      }
+
+      function recalc(variantId) {
+        var base = prices[variantId];
+        if (base == null) return;
+        root.querySelectorAll('tbody tr').forEach(function (tr) {
+          var pct = Number(tr.getAttribute('data-percentage')) || 0;
+          var unit = base * (100 - pct) / 100;
+          var cell = tr.querySelector('.inaltum-qty-table__unit');
+          if (cell) cell.textContent = formatMoney(unit);
+        });
+      }
+
+      function currentVariantId() {
+        var input = document.querySelector('form[action*="/cart/add"] [name="id"]');
+        return input ? input.value : null;
+      }
+
+      // Recalcular cuando cambie la variante (cubre selects e inputs del form).
+      document.addEventListener('change', function (e) {
+        if (e.target.closest && e.target.closest('form[action*="/cart/add"]')) {
+          var id = currentVariantId();
+          if (id) recalc(id);
+        }
+      });
+
+      var initial = currentVariantId();
+      if (initial) recalc(initial);
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Precios por cantidad",
+  "target": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titulo",
+      "default": "Precios por cantidad (mayorista)"
+    },
+    {
+      "type": "text",
+      "id": "col_qty",
+      "label": "Columna: cantidad",
+      "default": "Cantidad"
+    },
+    {
+      "type": "text",
+      "id": "col_discount",
+      "label": "Columna: descuento",
+      "default": "Descuento"
+    },
+    {
+      "type": "text",
+      "id": "col_unit",
+      "label": "Columna: precio unitario",
+      "default": "Precio por unidad"
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Nota al pie",
+      "default": "El descuento se aplica automaticamente en el carrito al alcanzar la cantidad."
+    },
+    {
+      "type": "header",
+      "content": "Fuente de datos (avanzado)"
+    },
+    {
+      "type": "text",
+      "id": "metafield_namespace",
+      "label": "Metafield namespace",
+      "default": "inaltum"
+    },
+    {
+      "type": "text",
+      "id": "metafield_key",
+      "label": "Metafield key",
+      "default": "volume_tiers"
+    }
+  ]
+}
+{% endschema %}
