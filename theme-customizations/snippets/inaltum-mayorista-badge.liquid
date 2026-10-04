@@ -1,0 +1,29 @@
+{%- comment -%}
+  Globito "Especial Mayorista" para las tarjetas de producto (listados/colecciones).
+  Aparece arriba a la derecha de la tarjeta segun el tag de segmento del producto.
+
+  Instalacion en el tema (snippets/card-product.liquid):
+    Dentro del bloque de media, justo despues de:
+      <div class="card__media ...">
+    agregar la linea:
+      {% render 'inaltum-mayorista-badge', card_product: card_product %}
+
+  Prioridad de segmento (igual que la funcion): Maquinaria > Importado > Nacional.
+  Para cambiar textos/%, colores o segmentos, edita este archivo.
+{%- endcomment -%}
+{%- liquid
+  assign inaltum_badge = ''
+  if card_product.tags contains 'Maquinaria'
+    assign inaltum_badge = 'Especial Mayorista 10%'
+  elsif card_product.tags contains 'Importado'
+    assign inaltum_badge = 'Especial Mayorista 30%'
+  elsif card_product.tags contains 'Nacional'
+    assign inaltum_badge = 'Especial Mayorista 15%'
+  endif
+-%}
+{%- if inaltum_badge != blank -%}
+  <span
+    class="inaltum-mayorista-badge"
+    style="position:absolute;top:8px;right:8px;z-index:3;max-width:72%;background:#FF9000;color:#ffffff;font-size:0.72rem;font-weight:700;line-height:1.15;text-align:center;padding:5px 9px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,0.2);pointer-events:none;"
+  >{{ inaltum_badge }}</span>
+{%- endif -%}
