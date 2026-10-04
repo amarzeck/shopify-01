@@ -4,3 +4,5 @@ api_version = "2025-07"
 type = "theme"
 name = "Inaltum - Tabla de precios por cantidad"
 handle = "quantity-table"
+
+uid = "f9c56b52-92e0-d9b9-4edc-8e52d55708a0730ddb69"

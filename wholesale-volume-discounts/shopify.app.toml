@@ -1,21 +1,19 @@
-# Configuracion del app de Shopify para los descuentos mayoristas de Inaltum.
-#
-# IMPORTANTE: `client_id` lo completa Shopify CLI automaticamente la primera vez
-# que corras `shopify app config link` (crea/vincula el app en tu organizacion
-# Partner gratuita). No lo inventes a mano.
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-name = "inaltum-wholesale-discounts"
-# client_id = "..."   # <- lo escribe `shopify app config link`
-application_url = "https://inaltum.cl"
+name = "Mayoristas-Inaltum"
+application_url = "https://shopify.dev/apps/default-app-home"
 embedded = true
+client_id = "61ad9f74fe4602e05b8bdd0100af79de"
 
 [access_scopes]
-# El app en si no necesita escribir nada; la Function corre en el checkout y el
-# bloque de tema es Liquid. Dejamos lectura de productos por si se amplia.
-scopes = "read_products"
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = ""
 
 [webhooks]
-api_version = "2025-07"
+api_version = "2027-01"
 
 [build]
 automatically_update_urls_on_dev = true
+
+[auth]
+redirect_urls = [ "https://shopify.dev/apps/default-app-home/api/auth" ]
