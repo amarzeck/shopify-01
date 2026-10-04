@@ -2,14 +2,26 @@ query CartInput {
   cart {
     lines {
       id
-      cost {
-        subtotalAmount {
-          amount
+      quantity
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          product {
+            # Pregunta a Shopify que tags de segmento tiene el producto.
+            hasTags(tags: ["Importado", "Nacional", "Maquinaria"]) {
+              tag
+              hasTag
+            }
+          }
         }
       }
     }
   }
   discount {
     discountClasses
+    # Tabla de tramos (JSON) guardada como metafield del descuento.
+    metafield(namespace: "$app", key: "function-configuration") {
+      jsonValue
+    }
   }
 }
