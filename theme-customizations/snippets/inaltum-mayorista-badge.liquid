@@ -13,12 +13,14 @@
 {%- endcomment -%}
 {%- liquid
   assign inaltum_badge = ''
-  if card_product.tags contains 'Maquinaria'
-    assign inaltum_badge = 'Especial Mayorista 10%'
-  elsif card_product.tags contains 'Importado'
-    assign inaltum_badge = 'Especial Mayorista 30%'
-  elsif card_product.tags contains 'Nacional'
-    assign inaltum_badge = 'Especial Mayorista 15%'
+  if card_product.tags contains 'M-70'
+    assign inaltum_badge = 'Mayorista hasta 30%'
+  elsif card_product.tags contains 'M-45'
+    assign inaltum_badge = 'Mayorista hasta 15%'
+  elsif card_product.tags contains 'M-35'
+    assign inaltum_badge = 'Mayorista hasta 10%'
+  elsif card_product.tags contains 'M-NAC'
+    assign inaltum_badge = 'Mayorista hasta 5%'
   endif
 -%}
 {%- if inaltum_badge != blank -%}
