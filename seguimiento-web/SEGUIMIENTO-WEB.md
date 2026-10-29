@@ -21,6 +21,7 @@
 | 5 | Corregir "PRUEBA TITULAR/DESCRIPCION" y dirección del footer | Cristhian | ⬜ | | |
 | 6 | Subir la fila de beneficios mayoristas bajo el hero | Cristhian | ⬜ | | |
 | 7 | Quitar/traducir bloques en inglés ocultos | Cristhian | ⬜ | | |
+| 8 | 🔴 Corregir tarifas de envío del checkout (BlueExpress $1.003.848 erróneo) + unificar dirección de retiro | Cristhian | ⬜ | | Prioritario — afecta ventas |
 
 ---
 

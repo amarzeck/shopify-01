@@ -160,6 +160,28 @@ especializamos en Soluciones Fitness a Colegios…") y **arrastrarla** justo
 
 ---
 
+## 8) 🔴 Revisar y corregir las TARIFAS DE ENVÍO del checkout (prioritario)
+
+**Objetivo:** el cliente está viendo tarifas de envío incorrectas/absurdas en el pago.
+
+**Evidencia (carrito con subtotal $170.000):**
+- **BlueExpress Express: $1.003.848** 🔴 (totalmente desproporcionado = error de configuración)
+- Starken a Domicilio: $87.417 (alto, revisar)
+- Otros envíos (Sendu): $110.459 (alto, revisar)
+- Envío gratuito / "Buscamos el más económico, te contactamos" / Retirar en local: Santa Elena 1867
+
+**Qué revisar:**
+- Admin → **Configuración → Envíos y entrega**: zonas, tarifas, y **tarifas calculadas por transportista** (carrier-calculated).
+- **Apps de courier** (BlueExpress, Starken, Sendu): credenciales/convenio, reglas de precio, recargos. **BlueExpress** parece devolver un valor erróneo → revisar cuenta/convenio y dimensiones.
+- **Peso / volumen de los productos:** pesos mal cargados o productos muy pesados (>23kg) inflan la tarifa calculada. Revisar pesos reales (relacionado con la colección "mayores a 21Kg").
+- Opción "Buscamos el envío más económico. Te contactamos para pago previo." → confirmar que opera como se espera.
+- **Dirección de retiro:** el checkout dice **"Santa Elena 1867"**, el footer decía **"Miguel Claro 109"** y el popup dice **"no tenemos tienda a calle"** → **UNIFICAR** dirección/mensaje de retiro en toda la web y el checkout (va de la mano con la tarea 5).
+
+**Verificación:** en un checkout de prueba (varios destinos/pesos), las tarifas son
+coherentes y **no** aparecen montos absurdos; la dirección de retiro es única y correcta.
+
+---
+
 ### Notas finales
 - Mantener **un solo** tema evergreen publicado; archivar duplicados y el "_MALO".
 - Cada cambio: **copia → previsualizar → aplicar al vivo**.
