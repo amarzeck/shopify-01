@@ -182,6 +182,36 @@ coherentes y **no** aparecen montos absurdos; la dirección de retiro es única 
 
 ---
 
+## 9) 🔴 Corregir PESOS de productos (causa raíz de las tarifas de envío)
+
+**Objetivo:** arreglar los pesos mal cargados que inflan (o rompen) las tarifas
+calculadas por transportista. **Es la causa del BlueExpress $1.003.848.**
+
+**Datos (auditoría por el conector — ver `pesos-a-corregir.csv`):**
+- **407 variantes con problema**: **377 con peso 0** y **30 con peso >50kg**.
+- **5 ERRORES GRAVES (≥300kg) — corregir YA:**
+  | Peso cargado | Producto | Peso real aprox. |
+  |---|---|---|
+  | **8.208 kg** | Escudo foco grande combate 55cm | ~0,8 kg |
+  | **5.625 kg** | Toldo Impermeable 3x3m Plegable | ~5,6 kg |
+  | **1.600 kg** | Balón de Rugby Storm XF N5 | ~0,4 kg |
+  | **1.125 kg** | Bala de lanzamiento 1 Kg | ~1 kg |
+  | **500 kg** | Pack 3 balones fútbol niños | ~1 kg |
+- Otros a revisar (100–300kg): "Tablero Pizarra táctica 193kg", "Pack Rack+Mancuernas **100Kg** marcado 240kg" (inconsistente).
+- **Peso real/alto legítimo** (racks, trotadoras, mesas ping-pong, taca-taca, jaulas 55–107kg): no es error, pero conviene venderlos como **flete / retiro / "cotiza despacho"**, no courier estándar.
+
+**Pasos:**
+1. Abrir `pesos-a-corregir.csv` (ordenado: errores graves arriba).
+2. Corregir primero los **5 graves** (Admin → Producto → variante → Peso).
+3. Completar los **377 con peso 0** (idealmente por **CSV de importación** de Shopify o edición masiva; priorizar lo que más se vende).
+4. Para equipos realmente pesados: definir regla de envío aparte (flete/retiro).
+
+**Verificación:** checkout de prueba con esos productos → tarifas coherentes, sin montos absurdos.
+
+> Claude puede **corregir los 5 graves por el conector** en minutos si se autoriza (es escritura de peso por variante). Avisar.
+
+---
+
 ### Notas finales
 - Mantener **un solo** tema evergreen publicado; archivar duplicados y el "_MALO".
 - Cada cambio: **copia → previsualizar → aplicar al vivo**.

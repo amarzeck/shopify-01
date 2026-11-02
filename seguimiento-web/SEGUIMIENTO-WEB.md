@@ -6,7 +6,7 @@
 >
 > Estados: ⬜ Pendiente · 🟡 En progreso · ✅ Hecho · ⛔ Bloqueado
 
-Última actualización: _(poner fecha al editar)_
+Última actualización: 2026-11-02
 
 | # | Tarea | Responsable | Estado | Fecha | Notas |
 |---|---|---|---|---|---|
@@ -22,6 +22,7 @@
 | 6 | Subir la fila de beneficios mayoristas bajo el hero | Cristhian | ⬜ | | |
 | 7 | Quitar/traducir bloques en inglés ocultos | Cristhian | ⬜ | | |
 | 8 | 🔴 Corregir tarifas de envío del checkout (BlueExpress $1.003.848 erróneo) + unificar dirección de retiro | Cristhian | ⬜ | | Prioritario — afecta ventas |
+| 9 | 🔴 Corregir PESOS de productos (5 errores graves + 377 productos en peso 0) — ver `pesos-a-corregir.csv` | Cristhian / Claude | ⬜ | | **Causa raíz del Tarea 8**. Claude puede corregir los 5 graves por el conector si se autoriza |
 
 ---
 
@@ -29,6 +30,7 @@
 > Agregar líneas tipo: `2026-10-27 — Cristhian — Tarea 4 hero publicada. Falta ajustar overlay.`
 
 - 2026-10-27 — Claude — Creadas instrucciones y este seguimiento en `seguimiento-web/`.
+- 2026-11-02 — Claude — Auditoría de pesos (Tarea 9): 407 variantes con problema (5 errores graves ≥300kg + 377 en peso 0). Listado completo en `pesos-a-corregir.csv`. Es la causa raíz de las tarifas de envío disparadas (Tarea 8).
 
 ---
 
