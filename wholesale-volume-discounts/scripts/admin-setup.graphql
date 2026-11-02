@@ -1,0 +1,68 @@
+# ---------------------------------------------------------------------------
+# Operaciones Admin API para activar el piloto DESPUES de desplegar la Function.
+# Se pueden correr desde la Shopify GraphiQL app, o pedirle a Claude que las
+# ejecute por el conector (reemplazando los valores).
+# API version sugerida: 2025-07
+# ---------------------------------------------------------------------------
+
+# PASO A) Obtener el ID de la Function ya desplegada.
+query GetFunctionId {
+  shopifyFunctions(first: 25) {
+    nodes {
+      id
+      title
+      apiType        # debe decir "product_discounts"
+      app { title }
+    }
+  }
+}
+
+# ---------------------------------------------------------------------------
+# PASO B) Crear el descuento automatico que corre la Function, cargando la
+# tabla de tramos en su metafield (namespace "volume_discount", key "tiers").
+# Pega en metafields[].value el CONTENIDO de config/tiers.json (como string JSON).
+# Reemplaza FUNCTION_ID por el id del Paso A.
+# ---------------------------------------------------------------------------
+mutation CreateAutomaticDiscount {
+  discountAutomaticAppCreate(
+    automaticAppDiscount: {
+      title: "Mayorista - Descuento por volumen"
+      functionId: "FUNCTION_ID"
+      startsAt: "2026-01-01T00:00:00Z"
+      combinesWith: { orderDiscounts: true, productDiscounts: false, shippingDiscounts: true }
+      metafields: [
+        {
+          namespace: "volume_discount"
+          key: "tiers"
+          type: "json"
+          value: "{\"priority\":[\"Maquinaria\",\"Importado\",\"Nacional\"],\"segments\":{\"Importado\":[{\"minQty\":3,\"percentage\":5},{\"minQty\":6,\"percentage\":10},{\"minQty\":12,\"percentage\":18},{\"minQty\":20,\"percentage\":25}],\"Nacional\":[{\"minQty\":5,\"percentage\":3},{\"minQty\":10,\"percentage\":6},{\"minQty\":20,\"percentage\":10}],\"Maquinaria\":[{\"minQty\":2,\"percentage\":3},{\"minQty\":3,\"percentage\":6},{\"minQty\":5,\"percentage\":10}]}}"
+        }
+      ]
+    }
+  ) {
+    automaticAppDiscount { discountId title status }
+    userErrors { field message }
+  }
+}
+
+# ---------------------------------------------------------------------------
+# PASO C) Escribir la MISMA tabla en un metafield de la TIENDA para que el
+# bloque de tema (Liquid) la pueda leer: shop.metafields.inaltum.volume_tiers
+# Reemplaza OWNER_ID por el gid de la tienda (query { shop { id } }).
+# ---------------------------------------------------------------------------
+mutation SetShopMetafield {
+  metafieldsSet(
+    metafields: [
+      {
+        ownerId: "OWNER_ID"
+        namespace: "inaltum"
+        key: "volume_tiers"
+        type: "json"
+        value: "{\"priority\":[\"Maquinaria\",\"Importado\",\"Nacional\"],\"segments\":{\"Importado\":[{\"minQty\":3,\"percentage\":5},{\"minQty\":6,\"percentage\":10},{\"minQty\":12,\"percentage\":18},{\"minQty\":20,\"percentage\":25}],\"Nacional\":[{\"minQty\":5,\"percentage\":3},{\"minQty\":10,\"percentage\":6},{\"minQty\":20,\"percentage\":10}],\"Maquinaria\":[{\"minQty\":2,\"percentage\":3},{\"minQty\":3,\"percentage\":6},{\"minQty\":5,\"percentage\":10}]}}"
+      }
+    ]
+  ) {
+    metafields { id namespace key }
+    userErrors { field message }
+  }
+}
